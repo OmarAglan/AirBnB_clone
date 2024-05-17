@@ -1,19 +1,7 @@
-#!usr/bin/python3
-"""Customise class for the entire project"""
+#!/usr/bin/python3
+"""This module instantiates an object of class FileStorage"""
 
-from uuid import uuid4
+from models.engine.file_storage import FileStorage
 
-
-class BaseModel:
-    """Custom Base Model class"""
-
-    def __init__(self, *args, **kwargs):
-        """
-        Initialize BaseModel
-
-        Args:
-        *args(args): input arguments
-        **kwargs(kwargs): input arguments
-        """
-        if not kwargs:
-            self.id = str(uuid4())
+storage = FileStorage()
+storage.reload()
