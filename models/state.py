@@ -1,11 +1,8 @@
 #!/usr/bin/python3
+""" State Module for HBNB project """
 from models.base_model import BaseModel
 
-class State(BaseModel):
-    """
-        defines a class state
 
-        Attributes:
-            name
-    """
+class State(BaseModel):
+    """ State class """
     name = ""
