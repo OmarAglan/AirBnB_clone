@@ -1,10 +1,14 @@
 #!/usr/bin/python3
-""" Place Module for HBNB project """
+"""Contains the Place class
+"""
+
+
 from models.base_model import BaseModel
 
 
 class Place(BaseModel):
-    """ A place to stay """
+    """Inherits from BaseModel
+    """
     city_id = ""
     user_id = ""
     name = ""
@@ -16,3 +20,8 @@ class Place(BaseModel):
     latitude = 0.0
     longitude = 0.0
     amenity_ids = []
+
+    def __init__(self, *args, **kwargs):
+        """Place class constructor
+        """
+        super().__init__(*args, **kwargs)
