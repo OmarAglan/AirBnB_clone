@@ -1,10 +1,10 @@
 footer {
-    text-align: center;
-    line-height: 60px;
     background-color: white;
-    color: black;
+    height: 60px;
+    width: 100%;
+    border-top: 1px solid #CCCCCC;
     position: fixed;
     bottom: 0;
-    height: 60px;
-    border-top: 1px solid #CCCCCC;
+    text-align: center;
+    line-height: 60px;
 }

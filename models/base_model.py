@@ -1,79 +1,56 @@
 #!/usr/bin/python3
-"""Contains the BaseModel class
-"""
-
+"""This script is the base model"""
 
 import uuid
 from datetime import datetime
-import models
-# iso_format = "%Y-%m-%dT%H:%M:%S.%f" # Custom datetime string
+from models import storage
 
 
 class BaseModel:
-    """Defines all common attributes/methods for other classes.
 
-    This will serve as the parent class for all the other classes.
-    """
+    """Class from which all other classes will inherit"""
 
     def __init__(self, *args, **kwargs):
-        """BaseModel Class Constructor.
-        """
-        if kwargs:
-            for key, val in kwargs.items():
-                if key in ("created_at", "updated_at"):
-                    # val = datetime.strptime(val, iso_format) # Custom
-                    # datetime string
-                    val = datetime.fromisoformat(val)
-                if key != "__class__":
-                    setattr(self, key, val)
+        """Initializes instance attributes
 
+        Args:
+            - *args: list of arguments
+            - **kwargs: dict of key-values arguments
+        """
+
+        if kwargs is not None and kwargs != {}:
+            for key in kwargs:
+                if key == "created_at":
+                    self.__dict__["created_at"] = datetime.strptime(
+                        kwargs["created_at"], "%Y-%m-%dT%H:%M:%S.%f")
+                elif key == "updated_at":
+                    self.__dict__["updated_at"] = datetime.strptime(
+                        kwargs["updated_at"], "%Y-%m-%dT%H:%M:%S.%f")
+                else:
+                    self.__dict__[key] = kwargs[key]
         else:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
-            models.storage.new(self)
+            storage.new(self)
 
     def __str__(self):
-        """Returns a neatly formated string representation of\
-        our object instances.
-        """
-        str_repr = "[{:s}] ({:s}) {}".format(
-            self.__class__.__name__,
-            self.id, self.__dict__)
-        return str_repr
+        """Returns official string representation"""
+
+        return "[{}] ({}) {}".\
+            format(type(self).__name__, self.id, self.__dict__)
 
     def save(self):
-        """Updates the public instance attribute updated_at\
-            with the current datetime.
-        """
+        """updates the public instance attribute updated_at"""
+
         self.updated_at = datetime.now()
-        models.storage.save()
+        storage.save()
 
     def to_dict(self):
-        """ returns a dictionary containing all keys/values\
-            of __dict__ of the instance.
+        """returns a dictionary containing all keys/values of __dict__"""
 
-            This method will be used to serialize all objects.
-        """
         my_dict = self.__dict__.copy()
-        iso_created_at = my_dict["created_at"].isoformat()
-        iso_updated_at = my_dict["updated_at"].isoformat()
-        my_dict["created_at"] = iso_created_at
-        my_dict["updated_at"] = iso_updated_at
-        my_dict["__class__"] = self.__class__.__name__
-        return (my_dict)
-
-    @staticmethod
-    def return_cls_objects(obj):
-        """Appends into a list all the objects of the passed obj argument"""
-        all_objects = models.storage.all()
-        _all_objects = []
-        for key, value in all_objects.items():
-            if obj.__name__ == key.split(".")[0]:
-                _all_objects.append(str(value))
-        return _all_objects
-
-    @classmethod
-    def all(cls):
-        """Return all objects for this class"""
-        return cls.return_cls_objects(cls)
+        my_dict["__class__"] = type(self).__name__
+        my_dict["created_at"] = my_dict["created_at"].isoformat()
+        my_dict["updated_at"] = my_dict["updated_at"].isoformat()
+        return my_dict
